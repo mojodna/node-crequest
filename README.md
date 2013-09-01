@@ -1,5 +1,8 @@
 # crequest
 
+[![Build
+Status](https://secure.travis-ci.org/mojodna/node-crequest.png?branch=master)](http://travis-ci.org/mojodna/node-crequest)
+
 [request](https://github.com/mikeal/request) with transparent compression. It
 also deviates slightly from `request`'s behavior by automatically parsing
 `application/json` responses. If you need the raw response body (in whatever

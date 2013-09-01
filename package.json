@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "request+compression--drop-in wrapper for 'request'",
   "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha"
+  },
   "author": "Seth Fitzsimmons <seth@mojodna.net>",
   "homepage": "https://github.com/mojodna/node-crequest",
   "bugs": "https://github.com/mojodna/node-crequest/issues",

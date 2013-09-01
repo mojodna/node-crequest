@@ -63,12 +63,12 @@ var request = function(uri, options, callback) {
         .on("end", function() {
           res.body = Buffer.concat(chunks);
 
-          var body = res.body;
-
           if (options.encoding === undefined ||
               Buffer.isEncoding(options.encoding)) {
-            body = body.toString(options.encoding);
+            res.body = res.body.toString(options.encoding);
           }
+
+          var body = res.body;
 
           // parse JSON if appropriate; res.body will contain the raw response,
           // body the parsed version
