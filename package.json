@@ -1,0 +1,23 @@
+{
+  "name": "crequest",
+  "version": "0.1.0",
+  "description": "request+compression--drop-in wrapper for 'request'",
+  "main": "index.js",
+  "author": "Seth Fitzsimmons <seth@mojodna.net>",
+  "license": "BSD",
+  "jshintConfig": {
+    "node": true,
+    "globalstrict": true,
+    "curly": true,
+    "sub": true,
+    "indent": 2,
+    "newcap": true,
+    "white": false,
+    "undef": true,
+    "unused": true,
+    "maxlen": 100
+  },
+  "dependencies": {
+    "request": "~2.27.0"
+  }
+}

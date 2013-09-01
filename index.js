@@ -1,0 +1,108 @@
+"use strict";
+
+var zlib = require("zlib");
+
+var copy = require("request/lib/copy"),
+    _request = require("request");
+
+var request = function(uri, options, callback) {
+
+  //
+  // Boilerplate from request
+  //
+
+  if (typeof uri === "undefined") {
+    throw new Error("undefined is not a valid uri or options object.");
+  }
+
+  if ((typeof options === "function") && !callback) {
+    callback = options;
+  }
+
+  if (options && typeof options === "object") {
+    options.uri = uri;
+  } else if (typeof uri === "string") {
+    options = { uri: uri };
+  } else {
+    options = uri;
+  }
+
+  options = copy(options);
+
+  // end boilerplate
+
+  if (typeof options.callback === "function") {
+    callback = options.callback;
+    delete options.callback;
+  }
+
+  options.headers = options.headers || {};
+
+  // trigger compression
+  options.headers["accept-encoding"] = "gzip,deflate";
+
+  return new _request.Request(options)
+    .on("response", function(res) {
+      var stream = this;
+
+      if (["gzip", "deflate"].some(function(enc) {
+        return res.headers["content-encoding"] === enc;
+      })) {
+        // response was compressed
+        stream = this.pipe(zlib.createUnzip());
+      }
+
+      var chunks = [];
+
+      // wire up event handlers
+      stream
+        .on("data", function(chunk) {
+          chunks.push(chunk);
+        })
+        .on("error", console.warn)
+        .on("end", function() {
+          res.body = Buffer.concat(chunks);
+
+          var body = res.body;
+
+          if (options.encoding === undefined ||
+              Buffer.isEncoding(options.encoding)) {
+            body = body.toString(options.encoding);
+          }
+
+          // parse JSON if appropriate; res.body will contain the raw response,
+          // body the parsed version
+          if (res.headers["content-type"].indexOf("application/json") >= 0) {
+            try {
+              body = JSON.parse(body);
+            } catch (e) {
+              return callback(e);
+            }
+          }
+
+          return callback(null, res, body);
+        });
+    });
+};
+
+request.Request = _request.Request;
+
+request.get = request;
+
+["POST", "PUT", "PATCH"].forEach(function(method) {
+  request[method.toLowerCase()] = function(uri, options, callback) {
+    var params = _request.initParams(uri, options, callback);
+
+    params.options.method = method;
+
+    return request(params.uri || null, params.options, params.callback);
+  };
+});
+
+// TODO head, del, defaults, forever, debug (property)
+
+request.initParams = _request.initParams;
+request.jar = _request.jar;
+request.cookie = _request.cookie;
+
+module.exports = request;
