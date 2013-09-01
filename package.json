@@ -4,6 +4,12 @@
   "description": "request+compression--drop-in wrapper for 'request'",
   "main": "index.js",
   "author": "Seth Fitzsimmons <seth@mojodna.net>",
+  "homepage": "https://github.com/mojodna/node-crequest",
+  "bugs": "https://github.com/mojodna/node-crequest/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mojodna/node-crequest.git"
+  },
   "license": "BSD",
   "jshintConfig": {
     "node": true,
