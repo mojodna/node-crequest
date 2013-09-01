@@ -13,7 +13,7 @@
     "type": "git",
     "url": "https://github.com/mojodna/node-crequest.git"
   },
-  "license": "BSD",
+  "license": "Apache 2.0",
   "jshintConfig": {
     "node": true,
     "globalstrict": true,
