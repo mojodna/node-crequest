@@ -11,7 +11,8 @@ argument (the response).
 
 This is intended as a drop-in replacement for `request`--to use it, replace
 `require("request")` with `require("crequest"). Where it's not a drop-in
-replacement, please send a pull request.
+replacement (not everything in `request` is proxied yet), please send a pull
+request.
 
 ## License
 
