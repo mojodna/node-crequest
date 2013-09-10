@@ -72,7 +72,8 @@ var request = function(uri, options, callback) {
 
           // parse JSON if appropriate; res.body will contain the raw response,
           // body the parsed version
-          if (res.headers["content-type"].indexOf("application/json") >= 0) {
+          if (res.headers['content-type'] &&
+              res.headers["content-type"].indexOf("application/json") >= 0) {
             try {
               body = JSON.parse(body);
             } catch (e) {
