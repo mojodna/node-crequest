@@ -62,7 +62,9 @@ var request = function(uri, options, callback) {
         .on("data", function(chunk) {
           chunks.push(chunk);
         })
-        .on("error", console.warn)
+        .on("error", function(err) {
+          console.warn(err.stack);
+        })
         .on("end", function() {
           res.body = Buffer.concat(chunks);
 
