@@ -36,6 +36,9 @@ var request = function(uri, options, callback) {
     delete options.callback;
   }
 
+  // provide a default callback
+  callback = callback || function() {};
+
   options.headers = options.headers || {};
 
   // trigger compression
