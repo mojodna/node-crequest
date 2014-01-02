@@ -1,9 +1,53 @@
 "use strict";
 
-var zlib = require("zlib");
+var stream = require("stream"),
+    util = require("util"),
+    zlib = require("zlib");
 
 var copy = require("request/lib/copy"),
     _request = require("request");
+
+var ConditionalUnzip = function() {
+  stream.Transform.call(this);
+
+  var dests = [],
+      source;
+
+  this.on("pipe", function(src) {
+    if (src instanceof _request.Request) {
+      src.on("response", function(res) {
+        if (["gzip", "deflate"].some(function(enc) {
+          return res.headers["content-encoding"] === enc;
+        })) {
+          // response was compressed
+          source = res.pipe(zlib.createUnzip());
+        } else {
+          source = res;
+        }
+
+        dests.forEach(function(dest) {
+          source.pipe(dest);
+        });
+      });
+    }
+  });
+
+  this.pipe = function(dest) {
+    if (source) {
+      source.pipe(dest);
+    } else {
+      dests.push(dest);
+    }
+  };
+
+  this._transform = function(buffer, encoding, callback) {
+    // drop (compressed) chunks on the floor since we can't get request to stop
+    // sending them to us
+    return callback();
+  };
+};
+
+util.inherits(ConditionalUnzip, stream.Transform);
 
 var request = function(uri, options, callback) {
 
@@ -44,7 +88,7 @@ var request = function(uri, options, callback) {
   // trigger compression
   options.headers["accept-encoding"] = "gzip,deflate";
 
-  return new _request.Request(options)
+  var request = new _request.Request(options)
     .on("response", function(res) {
       var stream = this;
 
@@ -89,6 +133,8 @@ var request = function(uri, options, callback) {
           return callback(null, res, body);
         });
     });
+
+  return request.pipe(new ConditionalUnzip());
 };
 
 request.Request = _request.Request;
