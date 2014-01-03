@@ -1,6 +1,6 @@
 {
   "name": "crequest",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "request+compression--drop-in wrapper for 'request'",
   "main": "index.js",
   "scripts": {
