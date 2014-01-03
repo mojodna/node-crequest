@@ -47,7 +47,7 @@ var request = function(uri, options, callback) {
   var request = new _request.Request(options)
     .on("response", function(res) {
       if (["gzip", "deflate"].some(function(enc) {
-        return this.headers["content-encoding"] === enc;
+        return res.headers["content-encoding"] === enc;
       })) {
         // response was compressed
         this.source = this.pipe(zlib.createUnzip());
