@@ -50,9 +50,9 @@ var request = function(uri, options, callback) {
         return res.headers["content-encoding"] === enc;
       })) {
         // response was compressed
-        this.source = this.pipe(zlib.createUnzip());
+        this.source = res.pipe(zlib.createUnzip());
       } else {
-        this.source = this;
+        this.source = res;
       }
 
       this.dests.forEach(function(dest) {
